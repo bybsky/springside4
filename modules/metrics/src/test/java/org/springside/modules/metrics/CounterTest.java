@@ -1,9 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2005, 2014 springside.github.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ *******************************************************************************/
 package org.springside.modules.metrics;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springside.modules.metrics.metric.Counter;
+import org.springside.modules.metrics.metric.CounterMetric;
 import org.springside.modules.metrics.utils.Clock.MockClock;
 
 public class CounterTest {
@@ -25,17 +32,19 @@ public class CounterTest {
 		clock.increaseTime(1000);
 
 		CounterMetric metric = counter.calculateMetric();
-		assertEquals(60, metric.totalCount);
-		assertEquals(60, metric.lastCount);
-		assertEquals(60d, metric.lastRate, 0);
+		assertThat(metric.totalCount).isEqualTo(60);
+		assertThat(metric.avgRate).isEqualTo(60);
+		assertThat(metric.latestCount).isEqualTo(60);
+		assertThat(metric.latestRate).isEqualTo(60);
 
 		counter.inc(20);
 		clock.increaseTime(1000);
 		metric = counter.calculateMetric();
 
-		assertEquals(80, metric.totalCount);
-		assertEquals(20, metric.lastCount);
-		assertEquals(20d, metric.lastRate, 0);
+		assertThat(metric.totalCount).isEqualTo(80);
+		assertThat(metric.avgRate).isEqualTo(40);
+		assertThat(metric.latestCount).isEqualTo(20);
+		assertThat(metric.latestRate).isEqualTo(20);
 	}
 
 	@Test
@@ -50,7 +59,7 @@ public class CounterTest {
 		clock.increaseTime(1000);
 
 		CounterMetric metric = counter.calculateMetric();
-		assertEquals(11, metric.totalCount);
+		assertThat(metric.totalCount).isEqualTo(11);
 	}
 
 	@Test
@@ -59,7 +68,7 @@ public class CounterTest {
 		clock.increaseTime(1000);
 
 		CounterMetric metric = counter.calculateMetric();
-		assertEquals(0, metric.totalCount);
-		assertEquals(0d, metric.lastRate, 0);
+		assertThat(metric.totalCount).isEqualTo(0);
+		assertThat(metric.latestRate).isEqualTo(0);
 	}
 }

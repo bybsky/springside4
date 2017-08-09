@@ -1,3 +1,8 @@
+/*******************************************************************************
+ * Copyright (c) 2005, 2014 springside.github.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ *******************************************************************************/
 package org.springside.modules.metrics.utils;
 
 /**
@@ -7,9 +12,9 @@ package org.springside.modules.metrics.utils;
  */
 public interface Clock {
 
-	long getCurrentTime();
-
 	static final Clock DEFAULT = new DefaultClock();
+
+	long getCurrentTime();
 
 	/**
 	 * 默认时间提供者，返回当前的时间，线程安全。

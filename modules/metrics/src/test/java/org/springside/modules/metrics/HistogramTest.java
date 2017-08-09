@@ -1,8 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2005, 2014 springside.github.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ *******************************************************************************/
 package org.springside.modules.metrics;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import org.junit.Test;
+import org.springside.modules.metrics.metric.Histogram;
+import org.springside.modules.metrics.metric.HistogramMetric;
 
 public class HistogramTest {
 
@@ -16,11 +23,11 @@ public class HistogramTest {
 
 		HistogramMetric metric = histogram.calculateMetric();
 
-		assertEquals(1, metric.min);
-		assertEquals(100, metric.max);
-		assertEquals(50.5, metric.mean, 0);
-		assertEquals(90, metric.pcts.get(90d), 0);
-		assertEquals(95, metric.pcts.get(95d), 0);
+		assertThat(metric.min).isEqualTo(1);
+		assertThat(metric.max).isEqualTo(100);
+		assertThat(metric.avg).isEqualTo(50.5);
+		assertThat(metric.pcts.get(90d)).isEqualTo(90);
+		assertThat(metric.pcts.get(95d)).isEqualTo(95);
 
 		for (int i = 1; i <= 100; i++) {
 			histogram.update(i * 2);
@@ -28,11 +35,11 @@ public class HistogramTest {
 
 		metric = histogram.calculateMetric();
 
-		assertEquals(2, metric.min);
-		assertEquals(200, metric.max);
-		assertEquals(101, metric.mean, 0);
-		assertEquals(180, metric.pcts.get(90d), 0);
-		assertEquals(190, metric.pcts.get(95d), 0);
+		assertThat(metric.min).isEqualTo(2);
+		assertThat(metric.max).isEqualTo(200);
+		assertThat(metric.avg).isEqualTo(101);
+		assertThat(metric.pcts.get(90d)).isEqualTo(180);
+		assertThat(metric.pcts.get(95d)).isEqualTo(190);
 	}
 
 	@Test
@@ -41,19 +48,19 @@ public class HistogramTest {
 
 		histogram.update(1);
 		HistogramMetric metric = histogram.calculateMetric();
-		assertEquals(1, metric.pcts.get(90d), 0);
-		assertEquals(1, metric.pcts.get(95d), 0);
+		assertThat(metric.pcts.get(90d)).isEqualTo(1);
+		assertThat(metric.pcts.get(95d)).isEqualTo(1);
 
 		for (int i = 1; i <= 3; i++) {
 			histogram.update(i);
 		}
 		metric = histogram.calculateMetric();
 
-		assertEquals(1, metric.min);
-		assertEquals(3, metric.max);
-		assertEquals(2, metric.mean, 0);
-		assertEquals(3, metric.pcts.get(90d), 0);
-		assertEquals(3, metric.pcts.get(95d), 0);
+		assertThat(metric.min).isEqualTo(1);
+		assertThat(metric.max).isEqualTo(3);
+		assertThat(metric.avg).isEqualTo(2);
+		assertThat(metric.pcts.get(90d)).isEqualTo(3);
+		assertThat(metric.pcts.get(95d)).isEqualTo(3);
 	}
 
 	@Test
@@ -62,10 +69,10 @@ public class HistogramTest {
 
 		HistogramMetric metric = histogram.calculateMetric();
 
-		assertEquals(0, metric.min);
-		assertEquals(0, metric.max);
-		assertEquals(0, metric.mean, 0);
-		assertEquals(0, metric.pcts.get(90d), 0);
+		assertThat(metric.min).isZero();
+		assertThat(metric.max).isZero();
+		assertThat(metric.avg).isZero();
+		assertThat(metric.pcts.get(90d)).isZero();
 	}
 
 	@Test()
@@ -76,8 +83,8 @@ public class HistogramTest {
 		}
 
 		HistogramMetric metric = histogram.calculateMetric();
-		assertEquals(3, metric.max);
-		assertTrue(metric.pcts.isEmpty());
-		assertNull(metric.pcts.get(90d));
+		assertThat(metric.max).isEqualTo(3);
+		assertThat(metric.pcts).isEmpty();
+		assertThat(metric.pcts.get(90d)).isNull();
 	}
 }
